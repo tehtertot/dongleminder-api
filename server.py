@@ -95,7 +95,7 @@ def create_item():
     except:
         return Response(status=500)
 
-@app.route("/checkout/<int:user>/<int:item>", methods=["POST"])
+@app.route("/users/checkout/<int:user>/<int:item>", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def checkout_item(user, item):
     try:
@@ -118,7 +118,7 @@ def checkout_item(user, item):
     except Exception as e:
         return Response(status=500)
     
-@app.route("/checkin/<int:user>/<int:item>", methods=["POST"])
+@app.route("/users/checkin/<int:user>/<int:item>", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def checkin_item(user, item):
     try:
@@ -135,4 +135,4 @@ def checkin_item(user, item):
         return Response(status=500)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
