@@ -4,8 +4,7 @@ from datetime import datetime
 
 from mysqlconnection import connectToMySQL
 
-
-app = Flask(__name__, template_folder='client-app/public')
+app = Flask(__name__)
 
 @app.route('/favicon.ico') 
 def favicon(): 
@@ -15,10 +14,6 @@ def favicon():
 def not_found(error):
     """ error handler """
     return make_response(jsonify({'error': 'Not found'}), 404)
-
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 @app.route("/users")
 @cross_origin(supports_credentials=True)
