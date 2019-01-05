@@ -1,0 +1,12 @@
+id,description,count,available
+,VGA to Display Port,40,38
+,VGA to HDMI,13,13
+,DVI (M) to HDMI,12,12
+,DVI (M) to Display Port,12,12
+,DVI (F) to Display Port,9,9
+,DVI (F) to HDMI,6,5
+,HDMI (M) to HDMI (M),6,6
+,DVI to USB-C,3,2
+,VGA to Mini HDMI,1,1
+,HDMI to Display Port,1,1
+,VGA to USB-C,0,0
