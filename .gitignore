@@ -6,3 +6,5 @@ mysqlconnection.py
 *.sql
 node_modules/
 yarn.lock
+*.mwb
+.DS_Store

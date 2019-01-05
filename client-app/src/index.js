@@ -65,7 +65,6 @@ class ItemRow extends React.Component {
         e.preventDefault();
         let item = this.props.item.id;
         let student = this.props.student.id;
-        console.log("going to handle checkin")
         fetch(`http://localhost:5000/checkin/${student}/${item}`, {
             method: "POST",
         })
@@ -141,7 +140,7 @@ class StudentSearch extends React.Component {
             filteredStudents: [],
             searchFilter: "",
         }
-        fetch('http://localhost:5000/students', {
+        fetch('http://localhost:5000/users', {
             method: 'GET',
             crossDomain: true,
         })
@@ -182,7 +181,7 @@ class Index extends React.Component {
     }
 
     displayStudent(id) {
-        fetch(`http://localhost:5000/students/${id}`, {
+        fetch(`http://localhost:5000/users/${id}`, {
             method: "GET",
             crossDomain: true,
         })
@@ -204,7 +203,7 @@ class Index extends React.Component {
 
     displayStudentItems() {
         let id = this.state.student.id;
-        fetch(`http://localhost:5000/students/${id}/items`, {
+        fetch(`http://localhost:5000/users/${id}/items`, {
             method: 'GET',
             crossDomain: true,
         })
@@ -215,20 +214,43 @@ class Index extends React.Component {
             })
     }
 
+    switchView() {
+        ReactDOM.render(
+            <InventoryIndex />,
+            document.getElementById('root')
+        );
+    }
+
     render() {
         return (
             <div className="container">
                 <h3>Dojo Inventory</h3>
+                <p className="link" onClick={this.switchView}>View All</p>
                 <StudentSearch showStudent={ this.displayStudent.bind(this) } />
                 <ItemTable student={this.state.student} items={this.state.items} update={this.updateTable} allItems={this.state.allItems} />
             </div>
         );
     }
 }
+
+class InventoryIndex extends React.Component {
+    render() {
+        return (
+            <div className="container">
+                <h3>Dojo Inventory</h3>
+                <p className="link" onClick={showMain}>View Students</p>
+            </div>
+        );
+    }
+}
   
 // ========================================
-  
-ReactDOM.render(
-    <Index />,
-    document.getElementById('root')
-);
+
+function showMain() {
+    ReactDOM.render(
+        <Index />,
+        document.getElementById('root')
+    );
+}
+
+showMain();

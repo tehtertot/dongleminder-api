@@ -20,12 +20,13 @@ def not_found(error):
 def index():
     return render_template("index.html")
 
-@app.route("/students")
+@app.route("/users")
 @cross_origin(supports_credentials=True)
-def all_students():
+def all_users():
     db = connectToMySQL()
-    students = db.query_db("SELECT id, full_name, email FROM students ORDER BY full_name ASC;")
-    return jsonify(students)
+    # filter by status?
+    users = db.query_db("SELECT id, full_name, email FROM users ORDER BY full_name ASC;")
+    return jsonify(users)
 
 @app.route("/items")
 @cross_origin(supports_credentials=True)
@@ -34,27 +35,37 @@ def all_items():
     items = db.query_db("SELECT id, description, available FROM items WHERE available > 0;")
     return jsonify(items)
 
-@app.route("/students/<int:id>")
+@app.route("/items/detail")
 @cross_origin(supports_credentials=True)
-def one_student(id):
+def all_items_with_detail():
     db = connectToMySQL()
-    student = db.query_db(f"SELECT id, full_name, email FROM students WHERE id={id};")
-    return jsonify(student)
+    items = db.query_db("SELECT id, description, count, available FROM items;")
+    db = connectToMySQL()
+    checked_out = db.query_db("SELECT user_id, item_id FROM checked_out_items WHERE checkin_date IS NULL;")
+    print(checked_out)
+    list_of_users = [checked_out["user_id"] for s in checked_out]
+    return jsonify(list_of_users)
 
-@app.route("/students/<int:id>/items")
+@app.route("/users/<int:id>")
 @cross_origin(supports_credentials=True)
-def one_student_items(id):
+def one_user(id):
     db = connectToMySQL()
-    student_items = db.query_db(f"SELECT item_id AS id, checkout_date, description FROM checked_out_items JOIN items ON checked_out_items.item_id = items.id WHERE student_id={id} AND checked_out_items.checkin_date IS NULL;")
-    print(student_items)
-    return jsonify(student_items)
+    user = db.query_db(f"SELECT id, full_name, email FROM users WHERE id={id};")
+    return jsonify(user)
+
+@app.route("/users/<int:id>/items")
+@cross_origin(supports_credentials=True)
+def one_user_items(id):
+    db = connectToMySQL()
+    user_items = db.query_db(f"SELECT item_id AS id, checkout_date, description FROM checked_out_items JOIN items ON checked_out_items.item_id = items.id WHERE user_id={id} AND checked_out_items.checkin_date IS NULL;")
+    return jsonify(user_items)
 
 ## read from file input?
-@app.route("/students/create", methods=["POST"])
-def create_student():
+@app.route("/users/create", methods=["POST"])
+def create_user():
     try:
         db = connectToMySQL()
-        query = "INSERT INTO students (first_name, last_name, email, start_date, grad_date) VALUES (%(f)s, %(l)s, %(e)s, %(s)s, %(g)s);"
+        query = "INSERT INTO users (first_name, last_name, email, start_date, grad_date) VALUES (%(f)s, %(l)s, %(e)s, %(s)s, %(g)s);"
         data = {
             "f": request.form["first"],
             "l": request.form["last"],
@@ -79,32 +90,35 @@ def create_item():
     except:
         return Response(status=500)
 
-@app.route("/checkout/<int:student>/<int:item>", methods=["POST"])
+@app.route("/checkout/<int:user>/<int:item>", methods=["POST"])
 @cross_origin(supports_credentials=True)
-def checkout_item(student, item):
+def checkout_item(user, item):
     try:
         db = connectToMySQL()
-        query = "INSERT INTO checked_out_items (student_id, item_id) VALUES (%(s)s, %(i)s);"
+        query = "INSERT INTO checked_out_items (user_id, item_id) VALUES (%(s)s, %(i)s);"
         data = {
-            "s": student,
+            "s": user,
             "i": item
         }
         inserted = db.query_db(query, data)
 
-        db = connectToMySQL()
-        query = f"UPDATE items SET available = available - 1 WHERE id={item};"
-        db.query_db(query)
-        return jsonify({'status': 1}) if inserted else jsonify({'status': 0})
+        if inserted:
+            db = connectToMySQL()
+            query = f"UPDATE items SET available = available - 1 WHERE id={item};"
+            db.query_db(query)
+            return jsonify({'status': 1})
+        else:
+            return jsonify({'status': 0})
         # return Response(status=200) if inserted else Response(status=500)
     except Exception as e:
         return Response(status=500)
     
-@app.route("/checkin/<int:student>/<int:item>", methods=["POST"])
+@app.route("/checkin/<int:user>/<int:item>", methods=["POST"])
 @cross_origin(supports_credentials=True)
-def checkin_item(student, item):
+def checkin_item(user, item):
     try:
         db = connectToMySQL()
-        query = f"UPDATE checked_out_items SET checkin_date = NOW() WHERE student_id = {student} AND item_id = {item};"
+        query = f"UPDATE checked_out_items SET checkin_date = NOW() WHERE user_id = {user} AND item_id = {item};"
         removed = db.query_db(query)
 
         db = connectToMySQL()

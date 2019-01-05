@@ -3,6 +3,12 @@ body {
   /* margin: 20px; */
 }
 
+.link {
+  color: #05AAE1;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .search {
   width: 30%;
   display: inline-block;
@@ -22,6 +28,7 @@ body {
       border: 1px solid #bbb;
       background-color: #ddd;
       padding: 5px;
+      cursor: pointer;
     }
 
 .itemsTable {
@@ -33,3 +40,4 @@ body {
   .itemDropdown {
     margin-right: 3%;
   }
+
