@@ -43,8 +43,18 @@ def all_items_with_detail():
     db = connectToMySQL()
     checked_out = db.query_db("SELECT user_id, item_id FROM checked_out_items WHERE checkin_date IS NULL;")
     print(checked_out)
-    list_of_users = [checked_out["user_id"] for s in checked_out]
-    return jsonify(list_of_users)
+    list_of_users = {u["user_id"] for u in checked_out}
+    db = connectToMySQL()
+    users = db.query_db(f"SELECT id, full_name FROM users WHERE id IN ({','.join(str(i) for i in list_of_users)});")
+    for item in items:
+        for c in checked_out:
+            if c['item_id'] == item['id']:
+                name = list(filter(lambda u: u['id'] == c['user_id'], users))[0]['full_name']
+                if 'users' in item:
+                    item['users'].append(name)
+                else:
+                    item['users'] = [name] 
+    return jsonify(items)
 
 @app.route("/users/<int:id>")
 @cross_origin(supports_credentials=True)
