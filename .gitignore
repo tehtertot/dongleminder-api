@@ -9,3 +9,4 @@ yarn.lock
 *.mwb
 .DS_Store
 *.bak
+yarn-error.log*
