@@ -49,6 +49,7 @@ def all_items_with_detail():
                     item['users'].append(name)
                 else:
                     item['users'] = [name] 
+    print(items)
     return jsonify(items)
 
 @app.route("/users/<int:id>")
@@ -67,18 +68,21 @@ def one_user_items(id):
 
 ## read from file input?
 @app.route("/users/create", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def create_user():
     try:
         db = connectToMySQL()
-        query = "INSERT INTO users (first_name, last_name, email, start_date, grad_date) VALUES (%(f)s, %(l)s, %(e)s, %(s)s, %(g)s);"
+        # query = "INSERT INTO users (first_name, last_name, email, start_date, grad_date) VALUES (%(f)s, %(l)s, %(e)s, %(s)s, %(g)s);"
+        query = "INSERT INTO users (first_name, last_name, email) VALUES (%(f)s, %(l)s, %(e)s);"
         data = {
-            "f": request.form["first"],
-            "l": request.form["last"],
+            "f": request.form["fname"],
+            "l": request.form["lname"],
             "e": request.form["email"],
-            "s": request.form["start"],
-            "g": request.form["grad"]
+            # "s": request.form["start"],
+            # "g": request.form["grad"]
         }
-        return db.query_db(query, data)
+        inserted = db.query_db(query, data)
+        return jsonify({'added': inserted})
     except:
         return Response(status=500)
 
