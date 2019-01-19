@@ -21,26 +21,26 @@ python server.py
 
 users >---< items  
 
-users
---- | --- 
-id (PK) | INT
-first_name | VARCHAR
-last_name | VARCHAR
+users  
+--- | ---   
+id (PK) | INT  
+first_name | VARCHAR  
+last_name | VARCHAR  
 
-items
---- | --- 
-id (PK) | INT
-description | VARCHAR
-count | INT
-available | INT
+items  
+--- | ---   
+id (PK) | INT  
+description | VARCHAR  
+count | INT  
+available | INT  
 
-checked_out_items
---- | --- 
-id (PK) | INT
-item_id | INT
-user_id | INT
-checkin_date | DATE
-checkout_date | DATE
+checked_out_items  
+--- | ---   
+id (PK) | INT  
+item_id | INT  
+user_id | INT  
+checkin_date | DATE  
+checkout_date | DATE  
 
 
 ## To Do
