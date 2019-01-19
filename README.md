@@ -21,20 +21,20 @@ python server.py
 
 users >---< items  
 
-users  
+users | type    
 --- | ---   
 id (PK) | INT  
 first_name | VARCHAR  
 last_name | VARCHAR  
 
-items  
+items | type   
 --- | ---   
 id (PK) | INT  
 description | VARCHAR  
 count | INT  
 available | INT  
 
-checked_out_items  
+checked_out_items | type    
 --- | ---   
 id (PK) | INT  
 item_id | INT  
