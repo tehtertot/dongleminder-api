@@ -22,14 +22,17 @@ python server.py
 users >---< items  
 
 +------------+---------+
-| users      |         |    | items                 |    | checked_out_items       |  
-+------------+---------+    |-----------------------|    |-------------------------|  
-| id (PK)    | INT     |    | int (PK)    | INT     |    | id (PK)       | INT     |  
-| first_name | VARCHAR |    | description | VARCHAR |    | item_id       | INT     |  
-| last_name  | VARCHAR |    | count       | INT     |    | user_id       | INT     |  
-| email      | VARCHAR |    | available   | INT     |    | checkin_date  | DATE    |  
-|            |         |    |             |         |    | checkout_date | DATE    |  
+| users      |         |    
++------------+---------+   
+| id (PK)    | INT     |     
+| first_name | VARCHAR |    
+| last_name  | VARCHAR |    
+| email      | VARCHAR |    
+|            |         |     
 +------------+---------+
+
+
+
 ## To Do
 - allow for uploading of csv to add new users
 - functionality for item creation/updating
